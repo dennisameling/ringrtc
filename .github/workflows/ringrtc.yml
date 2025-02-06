@@ -106,10 +106,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04, windows-latest, macos-13, ubuntu-22.04-arm]
         include:
-        - os: ubuntu-22.04
-          install-deps: sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream && sudo apt-get update && sudo apt-get install -y protobuf-compiler libpulse-dev libpulse0 pipewire && systemctl --user daemon-reload && systemctl --user --now enable pipewire pipewire-pulse
-          test-runner: xvfb-run --auto-servernum
-        - os: ubuntu-22.04-arm
+        - os: [ubuntu-22.04, ubuntu-22.04-arm]
           install-deps: sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream && sudo apt-get update && sudo apt-get install -y protobuf-compiler libpulse-dev libpulse0 pipewire && systemctl --user daemon-reload && systemctl --user --now enable pipewire pipewire-pulse
           test-runner: xvfb-run --auto-servernum
         - os: windows-latest
@@ -147,9 +144,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04, macos-13, windows-latest, ubuntu-22.04-arm]
         include:
-        - os: ubuntu-22.04
-          install-deps: sudo apt-get update && sudo apt-get install -y protobuf-compiler libpulse-dev
-        - os: ubuntu-22.04-arm
+        - os: [ubuntu-22.04, ubuntu-22.04-arm]
           install-deps: sudo apt-get update && sudo apt-get install -y protobuf-compiler libpulse-dev
         - os: macos-13
           install-deps: brew install protobuf coreutils
