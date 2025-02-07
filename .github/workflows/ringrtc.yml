@@ -104,7 +104,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, windows-latest, macos-13, ubuntu-22.04-arm64-4-cores]
+        os: [ubuntu-22.04, windows-latest, macos-13, ubuntu-22.04-arm]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -141,7 +141,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, macos-13, windows-latest, ubuntu-22.04-arm64-4-cores]
+        os: [ubuntu-22.04, macos-13, windows-latest, ubuntu-22.04-arm]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
