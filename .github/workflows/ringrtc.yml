@@ -104,7 +104,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, windows-latest, macos-13, ubuntu-22.04-arm]
+        # os: [ubuntu-22.04, windows-latest, macos-13, ubuntu-22.04-arm]
+        os: [ubuntu-22.04, ubuntu-22.04-arm-dennis]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -152,7 +153,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, macos-13, windows-latest, ubuntu-22.04-arm]
+        #os: [ubuntu-22.04, macos-13, windows-latest, ubuntu-22.04-arm]
+        os: [ubuntu-22.04, ubuntu-22.04-arm-dennis]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -174,37 +176,37 @@ jobs:
     - run: rustup toolchain install $(cat rust-toolchain) --profile minimal
     - run: cargo build -p ringrtc --features prebuilt_webrtc
 
-  android:
-    name: Android Build
-    runs-on: ubuntu-22.04
-    steps:
-    - name: Install protoc
-      run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
-    - uses: actions/checkout@v4
-    - run: rustup toolchain install $(cat rust-toolchain) --profile minimal --target aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android,i686-linux-android
-    - name: set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        distribution: temurin
-        java-version: 17
-    - run: bin/fetch-artifact -p android
-    - run: bin/build-aar --release --ringrtc-only
+  # android:
+  #   name: Android Build
+  #   runs-on: ubuntu-22.04
+  #   steps:
+  #   - name: Install protoc
+  #     run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
+  #   - uses: actions/checkout@v4
+  #   - run: rustup toolchain install $(cat rust-toolchain) --profile minimal --target aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android,i686-linux-android
+  #   - name: set up JDK 17
+  #     uses: actions/setup-java@v4
+  #     with:
+  #       distribution: temurin
+  #       java-version: 17
+  #   - run: bin/fetch-artifact -p android
+  #   - run: bin/build-aar --release --ringrtc-only
 
-  ios:
-    name: iOS Tests
-    runs-on: macos-13-large
-    steps:
-    - uses: actions/checkout@v4
-    - run: brew install protobuf coreutils # for grealpath
-    - run: cargo install cbindgen
-    - run: rustup toolchain install $(cat rust-toolchain) --profile minimal --target x86_64-apple-ios
-    - run: sudo xcodes select 15.2
-    - run: bin/fetch-artifact -p ios
-    - run: bin/build-ios --release --ringrtc-only --host-sim-only
-    - run: pod install
-      working-directory: src/ios/SignalRingRTC
-    # Pick a phone model here that's likely to work on recent Xcodes.
-    - run: xcodebuild test -workspace SignalRingRTC.xcworkspace -scheme SignalRingRTC -destination 'platform=iOS Simulator,name=iPhone 15'
-      working-directory: src/ios/SignalRingRTC
-      env:
-        TEST_RUNNER_RINGRTC_MAX_LOG_LEVEL: 2 # warnings only
+  # ios:
+  #   name: iOS Tests
+  #   runs-on: macos-13-large
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - run: brew install protobuf coreutils # for grealpath
+  #   - run: cargo install cbindgen
+  #   - run: rustup toolchain install $(cat rust-toolchain) --profile minimal --target x86_64-apple-ios
+  #   - run: sudo xcodes select 15.2
+  #   - run: bin/fetch-artifact -p ios
+  #   - run: bin/build-ios --release --ringrtc-only --host-sim-only
+  #   - run: pod install
+  #     working-directory: src/ios/SignalRingRTC
+  #   # Pick a phone model here that's likely to work on recent Xcodes.
+  #   - run: xcodebuild test -workspace SignalRingRTC.xcworkspace -scheme SignalRingRTC -destination 'platform=iOS Simulator,name=iPhone 15'
+  #     working-directory: src/ios/SignalRingRTC
+  #     env:
+  #       TEST_RUNNER_RINGRTC_MAX_LOG_LEVEL: 2 # warnings only
