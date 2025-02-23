@@ -118,7 +118,7 @@ jobs:
         elif [[ "${{ matrix.os }}" == windows-* ]]; then
           choco install protoc
         elif [[ "${{ matrix.os }}" == ubuntu-* ]]; then
-          sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream && sudo apt-get update && sudo apt-get install -y protobuf-compiler libpulse-dev libpulse0 pipewire && systemctl --user daemon-reload && systemctl --user --now enable pipewire pipewire-pulse
+          sudo apt-get update && sudo apt-get install -y protobuf-compiler libpulse-dev libpulse0
         fi
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
