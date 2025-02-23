@@ -105,12 +105,19 @@ jobs:
       fail-fast: false
       matrix:
         # os: [ubuntu-22.04, windows-latest, macos-13, ubuntu-22.04-arm]
-        os: [ubuntu-22.04, ubuntu-22.04-arm-dennis]
+        os: [ubuntu-22.04-arm, ubuntu-22.04-arm-dennis]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash # as opposed to PowerShell
     steps:
+    # https://github.com/actions/partner-runner-images/issues/53
+    - name: Work around DBUS_SESSION_BUS_ADDRESS error on Linux arm64
+      if: startsWith(matrix.os, 'ubuntu-22.04-arm')
+      run: |
+        echo "UID is $UID"
+        sudo systemctl start user@$UID.service
+        echo "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$UID/bus" >> $GITHUB_ENV
     - name: Install dependencies
       run: |
         if [[ "${{ matrix.os }}" == macos-* ]]; then
@@ -118,7 +125,7 @@ jobs:
         elif [[ "${{ matrix.os }}" == windows-* ]]; then
           choco install protoc
         elif [[ "${{ matrix.os }}" == ubuntu-* ]]; then
-          sudo apt-get update && sudo apt-get install -y protobuf-compiler libpulse-dev libpulse0
+          sudo apt-get update && sudo apt-get install -y protobuf-compiler libpulse-dev libpulse0 pipewire && systemctl --user daemon-reload && systemctl --user --now enable pipewire pipewire-pulse
         fi
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
